@@ -1,15 +1,17 @@
 #!/bin/bash
 
 ### ask user info ###
-echo "You current disks: " lsblk -lsf
-read -r -p 'disk to use:' disk
-read -r -p 'password for disk cryot :' crypt_psw
-read -r -p 'root password :' root_psw
-read -r -p 'hostname :' hostname
-read -r -p 'username :' user
-read -r -p 'username password:' user_psw
+echo "You current disks: " && lsblk -lsf
+read -r -p "disk to use: " disk
+read -r -p "password for disk crypt :" crypt_psw
+read -r -p "root password :" root_psw
+read -r -p "hostname :" hostname
+read -r -p "username :" user
+read -r -p "username password:" user_psw
 disk="/dev/${disk}"
 echo "${crypt_psw}" > crypted_psw
+
+
 
 ### creat partitions, create crypted volumes, format ###
 parted "${disk}" mklabel gpt mkpart primary 1MiB 1G set 1 esp on mkpart primary 1G 100%
