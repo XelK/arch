@@ -16,7 +16,7 @@ echo "${crypt_psw}" > crypted_psw
 ### creat partitions, create crypted volumes, format ###
 parted "${disk}" mklabel gpt mkpart primary 1MiB 1G set 1 esp on mkpart primary 1G 100%
 cryptsetup -q --label cryptedPartition luksFormat "${disk}2" crypted_psw
-cryptsetup open "{$disk}2" cryptlvm
+cryptsetup open "{$disk}2" cryptlvm -d crypted_psw
 pvcreate /dev/mapper/cryptlvm
 vgcreate lvmGroup /dev/mapper/cryptlvm
 lvcreate -l 20%FREE lvmGroup -n lvRoot
