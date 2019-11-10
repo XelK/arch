@@ -21,7 +21,7 @@ parted "${disk}" mklabel gpt
 parted -a opt "${disk}" mkpart primary 1MiB 1G  set 1 esp on 
 parted -a opt "${disk}" mkpart primary 1G 100%
 cryptsetup -q --label cryptedPartition luksFormat "${disk}2" crypted_psw
-cryptsetup open "{$disk}2" cryptlvm -d crypted_psw
+cryptsetup open "${disk}2" cryptlvm -d crypted_psw
 pvcreate /dev/mapper/cryptlvm
 vgcreate lvmGroup /dev/mapper/cryptlvm
 lvcreate -l 20%FREE lvmGroup -n lvRoot
@@ -81,5 +81,7 @@ cryptdevice=LABEL=cryptePart:cryptlvm root=LABEL=root rw
 arch-chroot /mnt groupadd sudo
 arch-chroot /mnt useradd -m -G sudo,video,audio -s /bin/bash "${user}"
 arch-chroot /mnt echo "${user_psw}" | passwd --stdin "${user}"
-
-
+arch-chroot /mnt echo "
+#! /bin/bash
+exec i3
+" > /home/"${user}"/.xinitrc 
