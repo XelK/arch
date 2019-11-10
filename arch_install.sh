@@ -5,7 +5,7 @@
 ### ask user info ###
 echo "You current disks: " && lsblk -lsf
 read -r -p "disk to use: " disk
-read -r -p "password for disk crypt :" crypt_psw
+#read -r -p "password for disk crypt :" crypt_psw
 read -r -p "root password :" root_psw
 read -r -p "hostname :" hostname
 read -r -p "username :" user
@@ -17,8 +17,8 @@ echo "${crypt_psw}" > crypted_psw
 parted "${disk}" mklabel gpt 
 parted -a opt "${disk}" mkpart primary 1MiB 1G  set 1 esp on 
 parted -a opt "${disk}" mkpart primary 1G 100%
-cryptsetup -q --label cryptedPartition luksFormat "${disk}2" crypted_psw
-cryptsetup open "${disk}2" cryptlvm -d crypted_psw
+cryptsetup -q --label cryptedPartition luksFormat "${disk}2" #crypted_psw
+cryptsetup open "${disk}2" cryptlvm #-d crypted_psw
 pvcreate /dev/mapper/cryptlvm
 vgcreate lvmGroup /dev/mapper/cryptlvm
 lvcreate -l 20%FREE lvmGroup -n lvRoot
