@@ -41,7 +41,7 @@ pacstrap /mnt base linux linux-firmware lvm2 vim iproute2 netctl ifplugd dhcpcd 
 genfstab -L /mnt >> /mnt/etc/fstab
 
 ### configure system into chroot ###
-arch-chroot /mnt echo "${root_psw}" | passwd --stdin root
+arch-chroot /mnt echo "root:${root_psw}" | chpasswd
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt  echo "
@@ -60,7 +60,7 @@ KEYMAP=it
 KEYMAP_TOGGLE=us
 FONT=eurlatgr
 " > /etc/vconsole.conf
-arch-chroot /mnt sed  -i -e 's/^HOOKS=*/HOOKS=\(base udev autodetect keymap consolefont modconf block encrypt lvm2 filesystems keyboard fsck\)/g' /etc/mkinitcpio.conf
+arch-chroot /mnt sed  -i -e 's/^HOOKS.*/HOOKS=\(base udev autodetect keymap consolefont modconf block encrypt lvm2 filesystems keyboard fsck\)/g' /etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio -P
 arch-chroot /mnt bootcl --path=/boot install
 arch-chroot /mnt echo "
@@ -80,7 +80,7 @@ cryptdevice=LABEL=cryptePart:cryptlvm root=LABEL=root rw
 ### user configuration ###
 arch-chroot /mnt groupadd sudo
 arch-chroot /mnt useradd -m -G sudo,video,audio -s /bin/bash "${user}"
-arch-chroot /mnt echo "${user_psw}" | passwd --stdin "${user}"
+arch-chroot /mnt echo "${user}:${user_psw}" | chpasswd
 arch-chroot /mnt echo "
 #! /bin/bash
 exec i3
