@@ -32,7 +32,7 @@ mkfs.fat -F32 "${disk}1" -n boot
 mount /dev/lvmGroup/lvRoot /mnt
 mkdir /mnt/{home,boot}
 mount /dev/lvmGroup/lvHome /mnt/home
-mount "{$disk}1" /mnt/boot
+mount "${disk}1" /mnt/boot
 
 ### install system packages ###
 pacstrap /mnt base linux linux-firmware lvm2 vim iproute2 netctl ifplugd dhcpcd dialog wpa_supplicant xorg-server xorg-xinit i3 ttf-dejavu dmenu sudo rxvt-unicode tmux 
