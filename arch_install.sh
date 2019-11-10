@@ -1,5 +1,8 @@
 #!/bin/bash
 
+### https://raw.githubusercontent.com/XelK/arch/master/arch_install.sh
+
+
 ### ask user info ###
 echo "You current disks: " && lsblk -lsf
 read -r -p "disk to use: " disk
@@ -14,7 +17,9 @@ echo "${crypt_psw}" > crypted_psw
 
 
 ### creat partitions, create crypted volumes, format ###
-parted "${disk}" mklabel gpt mkpart primary 1MiB 1G set 1 esp on mkpart primary 1G 100%
+parted "${disk}" mklabel gpt 
+parted -a opt "${disk}" mkpart primary 1MiB 1G  set 1 esp on 
+parted -a opt "${disk}" mkpart primary 1G 100%
 cryptsetup -q --label cryptedPartition luksFormat "${disk}2" crypted_psw
 cryptsetup open "{$disk}2" cryptlvm -d crypted_psw
 pvcreate /dev/mapper/cryptlvm
