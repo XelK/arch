@@ -2,7 +2,6 @@
 
 ### https://raw.githubusercontent.com/XelK/arch/master/arch_install.sh
 
-
 ### ask user info ###
 echo "You current disks: " && lsblk -lsf
 read -r -p "disk to use: " disk
@@ -13,8 +12,6 @@ read -r -p "username :" user
 read -r -p "username password:" user_psw
 disk="/dev/${disk}"
 echo "${crypt_psw}" > crypted_psw
-
-
 
 ### creat partitions, create crypted volumes, format ###
 parted "${disk}" mklabel gpt 
@@ -43,45 +40,44 @@ genfstab -L /mnt >> /mnt/etc/fstab
 ### configure system into chroot ###
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 arch-chroot /mnt hwclock --systohc
-arch-chroot /mnt  echo "
+echo "
 en_US.UTF-8 UTF-8  
 it_IT.UTF-8 UTF-8  
-" >> /etc/locale.gen
+" >> /mnt/etc/locale.gen
 arch-chroot /mnt  locale-gen
-arch-chroot /mnt  echo "${hostname}" > /etc/hostname
-arch-chroot /mnt echo "
+echo "${hostname}" > /mnt/etc/hostname
+echo "
 127.0.0.1	localhost
 ::1		    localhost
 127.0.1.1	${hostname}.localdomain ${hostname}
-" > /etc/hosts
-arch-chroot /mnt echo " 
+" > /mnt/etc/hosts
+echo " 
 KEYMAP=it
 KEYMAP_TOGGLE=us
 FONT=eurlatgr
-" > /etc/vconsole.conf
-arch-chroot /mnt sed  -i -e 's/^HOOKS.*/HOOKS=\(base udev autodetect keymap consolefont modconf block encrypt lvm2 filesystems keyboard fsck\)/g' /etc/mkinitcpio.conf
+" > /mnt/etc/vconsole.conf
+sed  -i -e 's/^HOOKS.*/HOOKS=\(base udev autodetect keymap consolefont modconf block encrypt lvm2 filesystems keyboard fsck\)/g' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio -P
 arch-chroot /mnt bootctl --path=/boot install
-arch-chroot /mnt echo "
+echo "
 default  arch
 timeout  0
 console-mode max
 editor   no
-" > /boot/loader/loader.conf 
-arch-chroot /mnt echo "
+" > /mnt/boot/loader/loader.conf 
+echo "
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
 cryptdevice=LABEL=cryptePart:cryptlvm root=LABEL=root rw
-" > /boot/loader/entries/arch.conf
-
+" > /mnt/boot/loader/entries/arch.conf
 
 ### user configuration ###
 arch-chroot /mnt groupadd sudo
 arch-chroot /mnt useradd -m -G sudo,video,audio -s /bin/bash "${user}"
 echo "${user}:${user_psw}" | chpasswd --root /mnt
 echo "root:${root_psw}" | chpasswd --root /mnt
-arch-chroot /mnt echo "
+echo "
 #! /bin/bash
 exec i3
-" > /home/"${user}"/.xinitrc 
+" > /mnt/home/"${user}"/.xinitrc
