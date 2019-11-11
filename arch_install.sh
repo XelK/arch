@@ -11,7 +11,7 @@ read -r -p "hostname :" hostname
 read -r -p "username :" user
 read -r -p "username password:" user_psw
 disk="/dev/${disk}"
-echo "${crypt_psw}" > crypted_psw
+#echo "${crypt_psw}" > crypted_psw
 
 ### creat partitions, create crypted volumes, format ###
 parted "${disk}" mklabel gpt 
@@ -69,7 +69,7 @@ echo "
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
-cryptdevice=LABEL=cryptePart:cryptlvm root=LABEL=root rw
+options cryptdevice=LABEL=cryptedPartition:cryptlvm root=LABEL=root rw
 " > /mnt/boot/loader/entries/arch.conf
 
 ### user configuration ###
@@ -81,3 +81,9 @@ echo "
 #! /bin/bash
 exec i3
 " > /mnt/home/"${user}"/.xinitrc
+
+#### end
+umount /mnt/home
+umount /mnt/boot
+umount /mnt
+reboot
