@@ -96,6 +96,27 @@ echo "
 exec i3
 " > /mnt/home/"${user}"/.xinitrc
 
+### configure network via cable ###
+echo "You current network interfaces: " && ip link show
+read -r -p "ethernet interface to use: " eth_int
+echo "
+Description='A basic dhcp ethernet connection'
+Interface=${eth_int}
+Connection=ethernet
+IP=dhcp
+DHCPClient=dhcpcd
+DHCPReleaseOnStop=no
+## for DHCPv6
+IP6=dhcp
+DHCP6Client=dhclient
+# for IPv6 autoconfiguration
+IP6=stateless
+" > /mnt/etc/netctl/ethernet-dhcp
+arch-chroot /mnt systemctl enable netctl-ifplugd@"${eth_int}".service
+
+
+
+
 #### end
 umount /mnt/home
 umount /mnt/boot
