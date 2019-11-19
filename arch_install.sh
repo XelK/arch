@@ -32,7 +32,7 @@ mount /dev/lvmGroup/lvHome /mnt/home
 mount "${disk}1" /mnt/boot
 
 ### install system packages ###
-pacstrap /mnt base linux linux-firmware lvm2 vim iproute2 netctl ifplugd dhcpcd dialog wpa_supplicant xorg-server xorg-xinit i3 ttf-dejavu dmenu sudo rxvt-unicode tmux 
+pacstrap /mnt base linux linux-firmware lvm2 vim iproute2 netctl ifplugd dhcpcd dialog wpa_supplicant xorg-server xorg-xinit i3 ttf-dejavu dmenu sudo urxvt tmux git
 
 ### configure fstab ###
 genfstab -L /mnt >> /mnt/etc/fstab
@@ -56,6 +56,17 @@ KEYMAP=it
 KEYMAP_TOGGLE=us
 FONT=eurlatgr
 " > /mnt/etc/vconsole.conf
+echo
+'
+Section "InputClass"
+    Identifier          "Keyboard Defaults"
+    MatchIsKeyboard     "yes"
+    Option "XkbLayout"  "it,us"
+    Option "XkbVariant" ",intl"
+    Option "XkbOptions" "grp:ctrl_alt_toggle"
+EndSection
+' > /mnt/etc/X11/xorg.conf.d/00-keyboard.conf
+
 sed  -i -e 's/^HOOKS.*/HOOKS=\(base udev autodetect keymap consolefont modconf block encrypt lvm2 filesystems keyboard fsck\)/g' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio -P
 arch-chroot /mnt bootctl --path=/boot install
@@ -75,6 +86,8 @@ options cryptdevice=LABEL=cryptedPartition:cryptlvm root=LABEL=root rw
 ### user configuration ###
 arch-chroot /mnt groupadd sudo
 arch-chroot /mnt useradd -m -G sudo,video,audio -s /bin/bash "${user}"
+sed  -i -e 's/^# %sudo.*/%sudo ALL=(ALL) ALL/g' /mnt/etc/sudoers.d
+
 echo "${user}:${user_psw}" | chpasswd --root /mnt
 echo "root:${root_psw}" | chpasswd --root /mnt
 echo "
@@ -86,4 +99,4 @@ exec i3
 umount /mnt/home
 umount /mnt/boot
 umount /mnt
-reboot
+echo "Installation completed!"
