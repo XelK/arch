@@ -87,7 +87,7 @@ options cryptdevice=LABEL=cryptedPartition:cryptlvm root=LABEL=root rw
 ### user configuration ###
 arch-chroot /mnt groupadd sudo
 arch-chroot /mnt useradd -m -G sudo,video,audio -s /bin/bash "${user}"
-sed  -i -e 's/^# %sudo.*/%sudo ALL=(ALL) ALL/g' /mnt/etc/sudoers.d
+sed  -i -e 's/^# %sudo.*/%sudo ALL=(ALL) ALL/g' /mnt/etc/sudoers
 
 echo "${user}:${user_psw}" | chpasswd --root /mnt
 echo "root:${root_psw}" | chpasswd --root /mnt
