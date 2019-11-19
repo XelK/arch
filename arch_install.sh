@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ### https://raw.githubusercontent.com/XelK/arch/master/arch_install.sh
+### https://git.io/JeVmL
 
 ### ask user info ###
 echo "You current disks: " && lsblk -lsf
@@ -18,7 +19,7 @@ parted "${disk}" mklabel gpt
 parted -a opt "${disk}" mkpart primary 1MiB 1G  set 1 esp on 
 parted -a opt "${disk}" mkpart primary 1G 100%
 cryptsetup -q --label cryptedPartition luksFormat "${disk}2" #crypted_psw
-cryptsetup open "${disk}2" cryptlvm #-d crypted_psw
+cryptsetup open "${disk}2" cryptlvm 
 pvcreate /dev/mapper/cryptlvm
 vgcreate lvmGroup /dev/mapper/cryptlvm
 lvcreate -l 20%FREE lvmGroup -n lvRoot
@@ -32,7 +33,7 @@ mount /dev/lvmGroup/lvHome /mnt/home
 mount "${disk}1" /mnt/boot
 
 ### install system packages ###
-pacstrap /mnt base linux linux-firmware lvm2 vim iproute2 netctl ifplugd dhcpcd dialog wpa_supplicant xorg-server xorg-xinit i3 ttf-dejavu dmenu sudo urxvt tmux git
+pacstrap /mnt base linux linux-firmware lvm2 vim iproute2 netctl ifplugd dhcpcd dialog wpa_supplicant xorg-server xorg-xinit i3 ttf-dejavu dmenu sudo rxvt-unicode tmux git
 
 ### configure fstab ###
 genfstab -L /mnt >> /mnt/etc/fstab
