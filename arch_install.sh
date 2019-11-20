@@ -97,6 +97,7 @@ echo "${user}:${user_psw}" | chpasswd --root /mnt
 echo "root:${root_psw}" | chpasswd --root /mnt
 echo "
 #! /bin/bash
+[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
 exec i3
 " > /mnt/home/"${user}"/.xinitrc
 arch-chroot /mnt git clone https://github.com/XelK/arch.git /home/"${user}"/arch
