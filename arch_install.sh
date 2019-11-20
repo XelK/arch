@@ -99,7 +99,7 @@ echo "
 #! /bin/bash
 exec i3
 " > /mnt/home/"${user}"/.xinitrc
-git clone https://github.com/XelK/arch.git /mnt/home/"${user}"/arch
+arch-chroot /mnt git clone https://github.com/XelK/arch.git /home/"${user}"/arch
 
 ### configure network via cable ###
 echo "You current network interfaces: " && ip link show
