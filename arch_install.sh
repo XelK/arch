@@ -99,6 +99,7 @@ echo "
 #! /bin/bash
 exec i3
 " > /mnt/home/"${user}"/.xinitrc
+git clone https://github.com/XelK/arch.git /mnt/home/"${user}"/arch
 
 ### configure network via cable ###
 echo "You current network interfaces: " && ip link show
@@ -117,6 +118,7 @@ DHCP6Client=dhclient
 IP6=stateless
 " > /mnt/etc/netctl/ethernet-dhcp
 arch-chroot /mnt systemctl enable netctl-ifplugd@"${eth_int}".service
+
 
 
 
