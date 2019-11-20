@@ -1,0 +1,3 @@
+curl -O https://git.io/JeVmL
+install software with : 
+	pacman -S --needed - < software
