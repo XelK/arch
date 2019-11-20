@@ -41,24 +41,28 @@ genfstab -L /mnt >> /mnt/etc/fstab
 ### configure system into chroot ###
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 arch-chroot /mnt hwclock --systohc
+
 echo "
 en_US.UTF-8 UTF-8  
 it_IT.UTF-8 UTF-8  
 " >> /mnt/etc/locale.gen
 arch-chroot /mnt  locale-gen
+
 echo "${hostname}" > /mnt/etc/hostname
+
 echo "
 127.0.0.1	localhost
 ::1		    localhost
 127.0.1.1	${hostname}.localdomain ${hostname}
 " > /mnt/etc/hosts
+
 echo " 
 KEYMAP=it
 KEYMAP_TOGGLE=us
 FONT=eurlatgr
 " > /mnt/etc/vconsole.conf
-echo
-'
+
+echo '
 Section "InputClass"
     Identifier          "Keyboard Defaults"
     MatchIsKeyboard     "yes"
