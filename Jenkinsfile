@@ -16,8 +16,8 @@ pipeline {
     stage('Build') {
       steps {
         ws(dir: 'pippo') {
-          sh 'ls -all'
           sh 'touch FileDiTest'
+          sh 'ls -all'
         }
 
       }
